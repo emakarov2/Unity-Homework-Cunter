@@ -1,14 +1,19 @@
+using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI _text;
-
     private int _count = 0;
     private bool _isEnabled = false;
-    private Coroutine _countingCoroutine;   
+    private Coroutine _countingCoroutine;
+
+    private WaitForSeconds _waitHalfSecond;
+    private float _halfSecondsInSecond = 0.5f;
+
+    public int Count => _count;
+
+    public event Action CountChanged;
 
     public void SwitchCounter()
     {
@@ -28,13 +33,17 @@ public class Counter : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        _waitHalfSecond = new WaitForSeconds(_halfSecondsInSecond);
+    }
+
     private IEnumerator CountHalfsSecond()
     {
         while (_isEnabled)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return _waitHalfSecond;
             AddOneToCounter();
-            DisplayResult();
         }
     }
 
@@ -42,13 +51,8 @@ public class Counter : MonoBehaviour
     {
         _count++;
 
+        CountChanged?.Invoke();
+
         Debug.Log("—чЄтчик: " + _count);
-    }
-
-    private void DisplayResult()
-    {
-        _text.text = _count.ToString("");
-
-        Debug.Log("–езультат " + _count + " выведен на экран");
     }
 }
