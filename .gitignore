@@ -16,3 +16,6 @@
 *.csproj
 *.sln
 *.suo
+
+# Specific video folder
+Assets/Recordings

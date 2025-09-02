@@ -4,16 +4,33 @@ using UnityEngine;
 
 public class Counter : MonoBehaviour
 {
+    [SerializeField] private InputReader _inputReader;
+
     private int _count = 0;
     private bool _isEnabled = false;
+    private float _delayInSeconds = 0.5f;
+    
     private Coroutine _countingCoroutine;
-
-    private WaitForSeconds _waitHalfSecond;
-    private float _halfSecondsInSecond = 0.5f;
+    private WaitForSeconds _delay;
 
     public int Count => _count;
 
     public event Action CountChanged;
+
+    private void Awake()
+    {
+        _delay = new WaitForSeconds(_delayInSeconds);
+    }
+
+    private void OnEnable()
+    {
+        _inputReader.LeftMouseButtonClicked += SwitchCounter;
+    }
+
+    private void OnDisable()
+    {
+        _inputReader.LeftMouseButtonClicked -= SwitchCounter;
+    }
 
     public void SwitchCounter()
     {
@@ -33,16 +50,11 @@ public class Counter : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        _waitHalfSecond = new WaitForSeconds(_halfSecondsInSecond);
-    }
-
     private IEnumerator CountHalfsSecond()
     {
         while (_isEnabled)
         {
-            yield return _waitHalfSecond;
+            yield return _delay;
             AddOneToCounter();
         }
     }
@@ -54,5 +66,5 @@ public class Counter : MonoBehaviour
         CountChanged?.Invoke();
 
         Debug.Log("Ñ÷¸ò÷èê: " + _count);
-    }
+    }    
 }
