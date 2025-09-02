@@ -9,7 +9,7 @@ public class Counter : MonoBehaviour
     private int _count = 0;
     private bool _isEnabled = false;
     private float _delayInSeconds = 0.5f;
-    
+
     private Coroutine _countingCoroutine;
     private WaitForSeconds _delay;
 
@@ -44,7 +44,12 @@ public class Counter : MonoBehaviour
         }
         else
         {
-            StopCoroutine(_countingCoroutine);
+            if (_countingCoroutine != null)
+            {
+                StopCoroutine(_countingCoroutine);
+
+                _countingCoroutine = null;
+            }
 
             Debug.Log("Счётчик остановлен. Текущее значение: " + _count);
         }
@@ -66,5 +71,5 @@ public class Counter : MonoBehaviour
         CountChanged?.Invoke();
 
         Debug.Log("Счётчик: " + _count);
-    }    
+    }
 }
